@@ -11,23 +11,14 @@ const firestore = new Firestore({
 
 //TODO: whitelist to reject any requests if not from specific chainlink node IPs 
 
-// structure for input json is as follows. In this example, jobSpec is 22, & actions can be any of the ones listed below
-// { 
-// 	"id": 22,
-// 	"data": { 
-// 	"apiToken": "abcdefghi",
-// 	"vehicleId": "23423423423423423423",
-// 	"action": "authenticate" , "vehicles", "wake_up", "vehicle_data", "unlock", "lock", "honk_horn",
-// 	}
-// }
-
 const createRequest = async (input, callback) => {
 
 	// Get input values
-	let jobRunID = input.id
-	let vehicleId = input.data.vehicleId
-	let address; // The smart contract address
-	let storedToken;
+	const jobRunID = input.id
+	const vehicleId = input.data.vehicleId
+	const address = input.data && input.data.address; // The smart contract address to send vehicle approval
+	const apiToken = input.data.apiToken;
+	const action = input.data.action
 	let authenticationToken;
 
 	const base_url = process.env.BASE_URL
@@ -39,12 +30,14 @@ const createRequest = async (input, callback) => {
 	const HONK_HORN_URL = base_url + `api/1/vehicles/${vehicleId}/command/honk_horn`
 
 	// Depending on the scenario get the authentication token either from the authentication request or from Google Cloud Firestore
-	if (input.data.action == 'authenticate') {  //get value from request
-		authenticationToken = `Bearer ${input.data.apiToken}`
-		address = input.data.address
+	if (action == 'authenticate') {  //get value from request
+		authenticationToken = `Bearer ${apiToken}`
 	} else {   // get value from Cloud Firestore		
 		const apiTokenRef = firestore.collection(COLLECTION_NAME).doc(vehicleId);
 		const doc = await apiTokenRef.get();
+
+		let storedToken = "";
+
 		if (!doc.exists) {
 			console.log('No such document in firestore!');
 		} else {
@@ -82,11 +75,11 @@ const createRequest = async (input, callback) => {
 		await axios.post(WAKE_UP_URL, null, { headers: headers })
 			.then(async function (response) {
 				// Only do callback if we're doing an authenticate, otherwise there'll be other requests to come
-				if (input.data.action == 'authenticate' && response.status == 200) {
+				if (action == 'authenticate' && response.status == 200) {
 
 					// Authentication was successful. Store the key to be used/retrieved for future requests, then do callback
 					try {
-						const tokenToStore = input.data.apiToken;
+						const tokenToStore = apiToken;
 						await firestore.collection(COLLECTION_NAME).doc(vehicleId).set({ tokenToStore });
 					} catch (error) {
 						console.log("Error storing token in Firestore database")
@@ -108,7 +101,7 @@ const createRequest = async (input, callback) => {
 	}
 
 	// Now depending on action, do different requests
-	switch (input.data.action) {
+	switch (action) {
 		case 'authenticate':
 			// Vehicle is being created. If the wakeup was successful then we don't need to do anything here, just return the vehicle address
 			break;
