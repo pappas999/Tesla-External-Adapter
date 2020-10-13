@@ -1,0 +1,10 @@
+name: Tesla External Adapter
+description: An example adapter to connect to a Tesla vehicle
+node_identifier: tesla-external-adapter
+platforms:
+  - AWS Lambda
+  - GCP Functions
+data_sources:
+  - name: Tesla API
+    url: https://www.teslaapi.io/
+parameters:
