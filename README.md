@@ -68,7 +68,8 @@ If the action was authenticate, the result output responds with the wallet addre
 ```
 
 ## Live Demo
-We have a version of the adapter currently running on Google Cloud at this location. It is currently pointing to a mock Tesla server
+We have a version of the adapter currently running on Google Cloud at the following location. It is currently pointing to a mock Tesla server
+
 [https://australia-southeast1-link-my-ride.cloudfunctions.net/Tesla-External-Adapter](https://australia-southeast1-link-my-ride.cloudfunctions.net/Tesla-External-Adapter)
 
 
