@@ -1,5 +1,5 @@
 name: Tesla External Adapter
-description: An example adapter to connect to a Tesla vehicle
+description: An external adapter to connect to a Tesla vehicle or Tesla Powerwall
 node_identifier: tesla-external-adapter
 platforms:
   - AWS Lambda
