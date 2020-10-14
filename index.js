@@ -1,6 +1,5 @@
 const { Requester, Validator } = require('@chainlink/external-adapter')
 const axios = require('axios')
-
 const Firestore = require('@google-cloud/firestore');
 const PROJECTID = process.env.FIRESTORE_PROJECT_ID;
 const COLLECTION_NAME = process.env.FIRESTORE_COLLECTION_NAME;
@@ -65,7 +64,9 @@ const createRequest = async (input, callback) => {
 			const longitude = response.data.response.drive_state.longitude * LAT_LONG_MULTIPLICATION_FACTOR
 			const latitude = response.data.response.drive_state.latitude * LAT_LONG_MULTIPLICATION_FACTOR
 
-			return `{${odometer},${chargeLevel},${longitude},${latitude}}`
+			response.data = `{${odometer},${chargeLevel},${longitude},${latitude}}`
+
+			return response
 		});
 
 	// First thing we need to always do is wake the vehicle up. If successful, then its ready to receive a request
@@ -95,7 +96,7 @@ const createRequest = async (input, callback) => {
 				}
 			});
 	} catch (error) {
-		callback(response.status, Requester.errored(jobRunID, error))
+		callback(500, Requester.errored(jobRunID, error))
 	}
 
 	// Now depending on action, do different requests
@@ -107,11 +108,11 @@ const createRequest = async (input, callback) => {
 		case 'vehicle_data':
 			try {
 				await getVehicleData()
-					.then((data) => {
+					.then((response) => {
 						callback(response.status,
 							{
 								jobRunID,
-								data,
+								data: response.data,
 								result: null,
 								statusCode: response.status
 							});
@@ -127,7 +128,7 @@ const createRequest = async (input, callback) => {
 			try {
 
 				// First get vehicle data
-				const vehicleData = await getVehicleData();
+				const { data: vehicleData } = await getVehicleData();
 
 				// Now that we have the data, we can unlock the vehicle
 				await axios.post(UNLOCK_VEHICLE_URL, null, { headers: headers })
@@ -150,7 +151,7 @@ const createRequest = async (input, callback) => {
 			try {
 
 				// First get vehicle data
-				const vehicleData = await getVehicleData();
+				const { data: vehicleData } = await getVehicleData();
 
 				// Now that we have the data, we can lock the vehicle
 				await axios.post(LOCK_VEHICLE_URL, null, { headers: headers })
