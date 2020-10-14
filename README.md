@@ -67,6 +67,11 @@ If the action was authenticate, the result output responds with the wallet addre
 }
 ```
 
+## Live Demo
+We have a version of the adapter currently running on Google Cloud at this location. It is currently pointing to a mock Tesla server
+[https://australia-southeast1-link-my-ride.cloudfunctions.net/Tesla-External-Adapter](https://australia-southeast1-link-my-ride.cloudfunctions.net/Tesla-External-Adapter)
+
+
 ## Install Locally
 
 Install dependencies:
@@ -96,7 +101,6 @@ yarn start
 ```bash
 curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 534ea675a9524e8e834585b00368b178, "data": { "apiToken": "abcdefghi", "vehicleId": "23423423423423423423", "action": "authenticate" } }'
 ```
-
 ## Docker
 
 If you wish to use Docker to run the adapter, you can build the image by running the following command:
