@@ -4,7 +4,4 @@ node_identifier: tesla-external-adapter
 platforms:
   - AWS Lambda
   - GCP Functions
-data_sources:
-  - name: Tesla API
-    url: https://www.teslaapi.io/
-parameters:
+  
