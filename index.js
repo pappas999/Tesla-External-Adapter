@@ -9,10 +9,8 @@ const firestore = new Firestore({
 	timestampsInSnapshots: true,
 });
 
-//TODO: whitelist to reject any requests if not from specific chainlink node IPs 
-
 const createRequest = async (input, callback) => {
-
+	
 	// Get input values
 	const jobRunID = input.id
 	const vehicleId = input.data.vehicleId
@@ -21,7 +19,7 @@ const createRequest = async (input, callback) => {
 	const action = input.data.action
 	let authenticationToken;
 
-	const base_url = process.env.BASE_URL
+	const base_url = process.env.BASE_URL || `https://owner-api.teslamotors.com/`;
 
 	const WAKE_UP_URL = base_url + `api/1/vehicles/${vehicleId}/wake_up`
 	const VEHICLE_DATA_URL = base_url + `api/1/vehicles/${vehicleId}/vehicle_data`
@@ -29,7 +27,7 @@ const createRequest = async (input, callback) => {
 	const LOCK_VEHICLE_URL = base_url + `api/1/vehicles/${vehicleId}/command/door_lock`
 	const HONK_HORN_URL = base_url + `api/1/vehicles/${vehicleId}/command/honk_horn`
 
-	// Depending on the scenario get the authentication token either from the authentication request or from Google Cloud Firestore
+	// Depending on the scenario, get the authentication token either from the authentication request or from Google Cloud Firestore
 	if (action == 'authenticate') {  //get value from request
 		authenticationToken = `Bearer ${apiToken}`
 	} else {   // get value from Cloud Firestore		
