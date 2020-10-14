@@ -34,27 +34,36 @@ See [Install Locally](#install-locally) for a quickstart
 
 ## Input Params
 
-The structure for the JSON input is as follows. In this example jobSpec is 534ea675a9524e8e834585b00368b178. Actions may be any of the ones listed below
+The structure for the JSON input is as follows. In this example jobSpec is 534ea675a9524e8e834585b00368b178. Actions may be any of the following:
+- authenticate
+- wake_up
+- vehicle_data
+- unlock
+- lock
+- honk_horn
 
 ```json
 { 
-    "id": 534ea675a9524e8e834585b00368b178,
+    "id": "534ea675a9524e8e834585b00368b178",
     "data": { 
     	"apiToken": "abcdefghi",
     	"vehicleId": "23423423423423423423",
-    	"action": "authenticate" , "vehicles", "wake_up", "vehicle_data", "unlock", "lock", "honk_horn",
+    	"action": "authenticate"
     }
 }
 ```
 
 ## Output
+If the action was unlock or lock, the data output json contains the following values:
+- (odometer, chargeLevel, longitude to 6dp, latitude to 6dp)
 
+If the action was authenticate, the result output responds with the wallet address representing the vehicle that was just authenticated
 ```json
 {
-    jobRunID: 0,
-    data: "10000,50,-22234242,15622344"` (odometer, chargeLevel, longitude to 6dp, latitude to 6dp)
-    result: 0x0000000000000000000000000000000000000000, (for requests to validate a vehicle this is your smart contract address)
-    statusCode: 200
+    "jobRunID": 0,
+    "data": "{50000,55,-35008518,138575206}",
+    "result": "0x0000000000000000000000000000000000000000",
+    "statusCode": 200
 }
 ```
 
@@ -85,7 +94,7 @@ yarn start
 ## Call the external adapter/API server
 
 ```bash
-curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 22, "data": { "apiToken": "abcdefghi", "vehicleId": "23423423423423423423", "action": "authenticate" } }'
+curl -X POST -H "content-type:application/json" "http://localhost:8080/" --data '{ "id": 534ea675a9524e8e834585b00368b178, "data": { "apiToken": "abcdefghi", "vehicleId": "23423423423423423423", "action": "authenticate" } }'
 ```
 
 ## Docker
@@ -163,7 +172,7 @@ If using a REST API Gateway, you will need to disable the Lambda proxy integrati
 ### Install to GCP
 
 - In Functions, create a new function, choose to ZIP upload
-- Click Browse and select the `external-adapter.zip` file
+- Click Browse and select the `tesla-external-adapter.zip` file
 - Select a Storage Bucket to keep the zip in
 - Function to execute: gcpservice
 - Click More, Add variable. Add all environment variables mentioned further above
@@ -171,7 +180,7 @@ If using a REST API Gateway, you will need to disable the Lambda proxy integrati
   
   ## Support
 
-Got questions or feedback? [harry@genesisblockchain.com.au](harry@genesisblockchain.com.au)
+Got questions or feedback? [harry@genesisblockchain.com.au](mailto:harry@genesisblockchain.com.au)
 
 ## License
 
