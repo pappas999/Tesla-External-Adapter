@@ -68,12 +68,6 @@ If the action was authenticate, the result output responds with the wallet addre
 }
 ```
 
-## Run Tests
-
-To run the Jest unit tests (which mock Axios and Firestore):
-
-`npm test`
-
 ## Live Demo
 We have a version of the adapter currently running on Google Cloud at the following location. It is currently pointing to a mock Tesla server
 
@@ -90,10 +84,10 @@ yarn
 
 ### Test
 
-Run the local tests:
+To run the Jest unit tests (which mock Axios and Firestore):
 
 ```bash
-yarn test
+npm test
 ```
 
 Natively run the application (defaults to port 8080):
@@ -101,7 +95,7 @@ Natively run the application (defaults to port 8080):
 ### Run
 
 ```bash
-yarn start
+npm start
 ```
 
 ## Call the external adapter/API server
