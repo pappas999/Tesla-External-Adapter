@@ -48,7 +48,8 @@ The structure for the JSON input is as follows. In this example jobSpec is 534ea
     "data": { 
     	"apiToken": "abcdefghi",
     	"vehicleId": "23423423423423423423",
-    	"action": "authenticate"
+        "action": "authenticate",
+        "address": "0x0000000000000000000000000000000000000000" // (only required for 'authenticate' action) The address corresponding to the vehicle to be verified
     }
 }
 ```
@@ -66,6 +67,12 @@ If the action was authenticate, the result output responds with the wallet addre
     "statusCode": 200
 }
 ```
+
+## Run Tests
+
+To run the Jest unit tests (which mock Axios and Firestore):
+
+`npm test`
 
 ## Live Demo
 We have a version of the adapter currently running on Google Cloud at the following location. It is currently pointing to a mock Tesla server

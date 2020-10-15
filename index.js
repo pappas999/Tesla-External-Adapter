@@ -9,11 +9,11 @@ const firestore = new Firestore({
 });
 
 const createRequest = async (input, callback) => {
-	
+
 	// Get input values
 	const jobRunID = input.id
 	const vehicleId = input.data.vehicleId
-	const address = input.data && input.data.address; // The smart contract address to send vehicle approval
+	const address = input.data && input.data.address; // The address of the vehicle we'd like to verify
 	const apiToken = input.data.apiToken;
 	const action = input.data.action
 	let authenticationToken;
@@ -75,7 +75,6 @@ const createRequest = async (input, callback) => {
 			.then(async function (response) {
 				// Only do callback if we're doing an authenticate, otherwise there'll be other requests to come
 				if (action == 'authenticate' && response.status == 200) {
-
 					// Authentication was successful. Store the key to be used/retrieved for future requests, then do callback
 					try {
 						const tokenToStore = apiToken;
@@ -174,7 +173,12 @@ const createRequest = async (input, callback) => {
 			try {
 				await axios.post(HONK_HORN_URL, null, { headers: headers })
 					.then(function (response) {
-						callback(response.status, Requester.success(jobRunID, response))
+						callback(response.status, {
+							jobRunID,
+							data: null,
+							result: null,
+							statusCode: response.status
+						});
 					});
 			} catch (error) {
 				callback(500, Requester.errored(jobRunID, error))
