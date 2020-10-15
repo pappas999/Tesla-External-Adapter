@@ -79,7 +79,7 @@ We have a version of the adapter currently running on Google Cloud at the follow
 Install dependencies:
 
 ```bash
-yarn
+npm install
 ```
 
 ### Test
